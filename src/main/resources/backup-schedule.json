@@ -1,0 +1,17 @@
+{
+  "tasks": [
+    {
+      "description": "",
+      "stages": [
+        {
+          "currentWorkingDirectory": "",
+          "backupDirectory": ""
+        },
+        {
+          "currentWorkingDirectory": "",
+          "backupDirectory": ""
+        }
+      ]
+    }
+  ]
+}

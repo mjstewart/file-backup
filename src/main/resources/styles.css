@@ -1,0 +1,192 @@
+
+/*
+ * --- Colors ---
+ * Dark theme  = #242424
+
+ * Pale green  = #ABF7AC
+ * Pale orange = #FFC88C
+ * Pale red    = #FCB2B2
+ *
+ * Validation green = #51C96B
+ * Validation red   = #DB3939
+ */
+
+.border-pane {
+    -fx-padding: 5px;
+}
+
+.grid-pane {
+    -fx-padding: 10px;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+    -fx-spacing: 5px;
+}
+
+.v-box {
+    -fx-spacing: 20px;
+    -fx-padding: 10px;
+}
+
+.h-box {
+    -fx-spacing: 20px;
+    -fx-padding: 10px;
+}
+
+.titled-pane {
+    -fx-padding: 0px;
+}
+
+.valid-validation-text {
+    -fx-text-fill: #51C96B;
+}
+
+.invalid-validation-text {
+    -fx-text-fill: #DB3939;
+}
+
+.lighter-text {
+    -fx-text-fill: derive(-fx-base, -50%)
+}
+
+#home-title {
+    -fx-font-size: 40px;
+    -fx-text-fill: white;
+}
+
+#home-top {
+    -fx-background-color: #242424;
+    -fx-padding: 10px;
+    -fx-text-fill: white;
+}
+
+#home-top .label {
+    -fx-text-fill: white;
+}
+
+#home-left-menu {
+    -fx-border-style: hidden solid hidden hidden;
+    -fx-padding: 10px;
+    -fx-border-color: derive(-fx-base, -20%);
+}
+
+.menu-button {
+    -fx-pref-width: 130px;
+    -fx-pref-height: 40px;
+    -fx-padding: 5px;
+}
+
+.progress-indicator .percentage {
+    -fx-fill: white;
+}
+
+.file-system-action-new {
+    -fx-background-color: #ABF7AC;
+    -fx-border-color: -fx-base;
+}
+
+.file-system-action-modify {
+    -fx-background-color: #FFC88C;
+    -fx-border-color: -fx-base;
+}
+
+.file-system-action-delete {
+    -fx-background-color: #FCB2B2;
+    -fx-border-color: -fx-base;
+}
+
+.missing-cell-value {
+    -fx-background-color: #BF4545;
+    -fx-font-weight: bold;
+    -fx-border-color: gray;
+    -fx-border-width: 1 1 0 0;
+}
+
+.task-setting-ready {
+    -fx-background-color: #ABF7AC;
+    -fx-border-color: -fx-base;
+}
+
+.task-setting-error {
+    -fx-background-color: #FCB2B2;
+    -fx-border-color: -fx-base;
+}
+
+
+.error-label {
+    /* Basic error labels that appear on main views */
+}
+
+.table-cell-button {
+    -fx-pref-width: 100px;
+    -fx-padding: 2px;
+}
+
+.backup-execution-success {
+    -fx-background-color: #ABF7AC;
+    -fx-border-color: -fx-base;
+}
+
+.backup-execution-failure {
+    -fx-background-color: #FCB2B2;
+    -fx-border-color: -fx-base;
+}
+
+/* Make these lighter than file-system-action-XXX to differentiate */
+
+.backup-execution-file-system-action-new {
+    -fx-background-color: #D7F5D7;
+    -fx-border-color: -fx-base;
+}
+
+.backup-execution-file-system-action-modify {
+    -fx-background-color: #FFE5C7;
+    -fx-border-color: -fx-base;
+}
+
+.backup-execution-file-system-action-delete {
+    -fx-background-color: #FCC3C3;
+    -fx-border-color: -fx-base;
+}
+
+.log-message-severe {
+    -fx-background-color: #FCB2B2;
+    -fx-border-color: -fx-base;
+}
+
+.log-message-info {
+    -fx-background-color: #C1D2E4;
+    -fx-border-color: -fx-base;
+}
+
+.log-message-warning {
+    -fx-background-color: #FFC88C;
+    -fx-border-color: -fx-base;
+}
+
+.monitoring-status-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 150px;
+    -fx-background-color: #242424;
+    -fx-padding: 5px;
+    -fx-background-radius: 10px;
+    -fx-alignment: center;
+}
+
+.monitoring-status-label-active {
+    -fx-text-fill: lime;
+}
+
+.monitoring-status-label-inactive {
+    -fx-text-fill: red;
+}
+
+.monitoring-button {
+    -fx-pref-width: 150px;
+    -fx-pref-height: 40px;
+    -fx-padding: 5px;
+}
+
+#live-status-action-view {
+    -fx-padding: 5 0 0 0;
+}
