@@ -253,7 +253,8 @@ public class FilePathInfo {
 
     /**
      * Checks if both paths have the same last path segment. Root directories such as 'C:/' are not permitted meaning
-     * there must be at least 1 path segment after the root drive.
+     * there must be at least 1 path segment after the root drive such as C:/backup. This is to prevent copying the
+     * entire drive over which is not practical.
      *
      * <p>This is to verify the current working and backup version begin at the same root directory as it is assumed from
      * that point on all directory structures are the same.
