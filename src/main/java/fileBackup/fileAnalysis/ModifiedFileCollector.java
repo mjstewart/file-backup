@@ -70,11 +70,9 @@ public class ModifiedFileCollector extends AbstractFileCollector<FileChangeResul
 
         Try<Path> tryWalk = Try.of(() -> {
             if (filePathInfo.isFollowSymlinks()) {
-                System.out.println("ModifiedFileCollector: Executing file walk using sym links");
                 EnumSet<FileVisitOption> opts = EnumSet.of(FOLLOW_LINKS);
                 return Files.walkFileTree(filePathInfo.getCurrentWorkingRootPath(), opts, Integer.MAX_VALUE, modifiedFileVisitor);
             } else {
-                System.out.println("ModifiedFileCollector: Executing file walk NOT using sym links");
                 return Files.walkFileTree(filePathInfo.getCurrentWorkingRootPath(), modifiedFileVisitor);
             }
         });

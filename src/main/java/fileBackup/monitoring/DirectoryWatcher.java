@@ -223,9 +223,6 @@ public class DirectoryWatcher implements Runnable, Publisher<LogMessage>, Shutdo
         }
     }
 
-
-
-
     @Override
     public void run() {
         running.set(true);
@@ -297,7 +294,7 @@ public class DirectoryWatcher implements Runnable, Publisher<LogMessage>, Shutdo
             boolean valid = key.reset();
             if (!valid) {
                 /*
-                 * What an invalid watch key means is unknown...
+                 * What an invalid watch key means is difficult to say...
                  *
                  * Based on the WatchService docs, the watch key can be cancelled when the file system is no longer accessible.
                  * The definition of this is unknown so there could be a legitimate issue which would make the backup
