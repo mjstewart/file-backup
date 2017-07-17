@@ -48,8 +48,7 @@ public class FilePathInfo {
     @Column(nullable = false)
     private String rootDirectoryName;
 
-    @Transient
-    private PathMappingStrategy pathMappingStrategy;
+    private static final PathMappingStrategy pathMappingStrategy = PathMappingStrategy.create();
 
     /**
      * For hibernate only.
@@ -72,7 +71,6 @@ public class FilePathInfo {
         this.currentWorkingRootPath = currentWorkingRootPath;
         this.backupRootPath = backupRootPath;
         this.rootDirectoryName = rootDirectoryName;
-        this.pathMappingStrategy = PathMappingStrategy.create();
     }
 
     @Override
