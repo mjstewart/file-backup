@@ -346,7 +346,7 @@ public class HomeView extends StyledBorderPane implements Shutdownable {
             if (clearResult.isLeft()) {
                 new Alert(Alert.AlertType.ERROR, "Database could not clear the last monitored session due to: " +
                         clearResult.getLeft().getReason() + ".\n\n" +
-                        "Try restarting the application or try again, otherwise a manual backup can be performed.")
+                        "Try restarting the application or delete " + ApplicationSettings.getDatabasePath().getParent())
                         .showAndWait();
                 return false;
             }
