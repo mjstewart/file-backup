@@ -269,6 +269,9 @@ public class HomeView extends StyledBorderPane implements Shutdownable {
             boolean existingFiles = eitherAllFiles.isRight() && !eitherAllFiles.get().isEmpty();
             boolean existingLogs = eitherAllLogs.isRight() && !eitherAllLogs.get().isEmpty();
 
+            // If there has already been a monitoring view open then setting to null keeps it closed if cancel or close is pressed.
+            liveMonitoringView = null;
+
             /*
              * The only time a new monitoring session won't be created is when there is a previous monitoring
              * session saved and the user presses OK in the below Alert in which case the previous session is restored.
