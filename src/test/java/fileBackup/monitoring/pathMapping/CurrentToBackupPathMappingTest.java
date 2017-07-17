@@ -43,7 +43,7 @@ public class CurrentToBackupPathMappingTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        FilePathInfo filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator).get();
+        FilePathInfo filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator).get();
 
         Path fullCurrentPath = Paths.get("C:\\Users\\me\\Desktop\\" + rootDirectory + "\\stuff\\cc\\TestDir\\Orders\\Freight\\Shipping\\costs.txt");
 
@@ -93,7 +93,7 @@ public class CurrentToBackupPathMappingTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        FilePathInfo filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator).get();
+        FilePathInfo filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath,false, validator).get();
 
         Path fullCurrentPath = Paths.get("/home/me/stuff/" + rootDirectory + "/stuff/cc/TestDir/Orders/Freight/Shipping/costs.txt");
 
@@ -144,7 +144,7 @@ public class CurrentToBackupPathMappingTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        FilePathInfo filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator).get();
+        FilePathInfo filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator).get();
 
         Path fullCurrentPath = Paths.get("C:\\Users\\me\\Desktop\\" + rootDirectory + "\\stuff");
 
@@ -181,7 +181,7 @@ public class CurrentToBackupPathMappingTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        FilePathInfo filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator).get();
+        FilePathInfo filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator).get();
 
         Path fullCurrentPath = Paths.get("/home/me/stuff/" + rootDirectory + "/stuff");
 
@@ -219,7 +219,7 @@ public class CurrentToBackupPathMappingTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        FilePathInfo filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator).get();
+        FilePathInfo filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator).get();
 
         Path fullCurrentPath = Paths.get("C:\\Users\\me\\Desktop\\" + rootDirectory);
 
@@ -254,7 +254,7 @@ public class CurrentToBackupPathMappingTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        FilePathInfo filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator).get();
+        FilePathInfo filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator).get();
 
         Path fullCurrentPath = Paths.get("/home/me/stuff/" + rootDirectory);
 

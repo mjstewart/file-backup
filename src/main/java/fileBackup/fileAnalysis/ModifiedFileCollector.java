@@ -10,6 +10,9 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.Duration;
+import java.util.EnumSet;
+
+import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 
 /**
  * Performs a read only file system scan starting on the current drive starting from
@@ -65,7 +68,16 @@ public class ModifiedFileCollector extends AbstractFileCollector<FileChangeResul
     public Either<FileAccessError, FileChangeResult> getFiles() {
         ModifiedFileVisitor modifiedFileVisitor = new ModifiedFileVisitor();
 
-        Try<Path> tryWalk = Try.of(() -> Files.walkFileTree(filePathInfo.getCurrentWorkingRootPath(), modifiedFileVisitor));
+        Try<Path> tryWalk = Try.of(() -> {
+            if (filePathInfo.isFollowSymlinks()) {
+                System.out.println("ModifiedFileCollector: Executing file walk using sym links");
+                EnumSet<FileVisitOption> opts = EnumSet.of(FOLLOW_LINKS);
+                return Files.walkFileTree(filePathInfo.getCurrentWorkingRootPath(), opts, Integer.MAX_VALUE, modifiedFileVisitor);
+            } else {
+                System.out.println("ModifiedFileCollector: Executing file walk NOT using sym links");
+                return Files.walkFileTree(filePathInfo.getCurrentWorkingRootPath(), modifiedFileVisitor);
+            }
+        });
         if (tryWalk.isSuccess()) {
             return Either.right(modifiedFileVisitor.fileChangeResult);
         }

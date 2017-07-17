@@ -21,6 +21,11 @@ import java.nio.file.attribute.FileTime;
  * <p>Its works in the opposite direction of the {@code ModifiedFileCollector} and can be run in parallel since
  * it doesn't modify the backup drive.</p>
  *
+ * <p>No support for symlinks is needed as {@code DeletedFileCollector} scans the backup drive which has no references
+ * to other files given the use case is do the backup on a USB, not the current drive. This is contrasted to the
+ * {@code ModifiedFileCollector} where symlinks are supported as its possible the need to create a starting root
+ * directory that contains symlinks to all the other directories you want backed up.</p>
+ *
  * <p>The strategy for determining if a file that is on the backup drive does not exist on the current drive is
  * first to get the backup path and map it to what its representation would be on the current drive which is achieved using
  * path mapping methods in {@code FilePathInfo}.</p>

@@ -20,15 +20,16 @@ public class TaskSetting {
     private String description;
     private String currentWorkingDirectory;
     private String backupDirectory;
+    private boolean followSymlinks;
 
-    public TaskSetting(String description, String currentWorkingDirectory, String backupDirectory) {
+    public TaskSetting(String description, String currentWorkingDirectory, String backupDirectory, boolean followSymlinks) {
         this.description = description;
         this.currentWorkingDirectory = currentWorkingDirectory;
         this.backupDirectory = backupDirectory;
+        this.followSymlinks = followSymlinks;
     }
 
-    public TaskSetting() {
-    }
+    public TaskSetting() {}
 
     public String getDescription() {
         return description;
@@ -42,7 +43,11 @@ public class TaskSetting {
         return Paths.get(backupDirectory);
     }
 
+    public boolean isFollowSymlinks() {
+        return followSymlinks;
+    }
+
     public Either<String, FilePathInfo> status() {
-        return FilePathInfo.of(getCurrentWorkingDirectoryPath(), getBackupDirectoryPath(), new FileValidator());
+        return FilePathInfo.of(getCurrentWorkingDirectoryPath(), getBackupDirectoryPath(), followSymlinks, new FileValidator());
     }
 }

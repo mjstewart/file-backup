@@ -8,6 +8,7 @@ package fileBackup.fileAnalysis;
 public enum FileType {
     File("File"),
     Directory("Directory"),
+    Symbolic("Symbolic Link"),
     Unknown("Unknown");
 
     private String description;

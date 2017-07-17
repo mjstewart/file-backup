@@ -43,7 +43,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(false);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfo.isLeft(), is(true));
     }
 
@@ -58,7 +58,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(false);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfo.isLeft(), is(true));
     }
 
@@ -73,7 +73,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(false);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(false);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfo.isLeft(), is(true));
     }
 
@@ -89,7 +89,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfo.isLeft(), is(true));
     }
 
@@ -105,7 +105,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfo.isLeft(), is(true));
     }
 
@@ -120,7 +120,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfo.isLeft(), is(true));
     }
 
@@ -135,7 +135,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfo.isLeft(), is(true));
     }
 
@@ -160,7 +160,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
 
         assertThat(filePathInfo.isRight(), is(true));
         assertThat(filePathInfo.get().getRootDirectoryName(), is(rootDirectory));
@@ -187,7 +187,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
 
         assertThat(filePathInfo.isRight(), is(true));
         assertThat(filePathInfo.get().getRootDirectoryName(), is(rootDirectory));
@@ -211,7 +211,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
 
         assertThat(filePathInfo.isLeft(), is(true));
     }
@@ -234,7 +234,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
 
         assertThat(filePathInfo.isLeft(), is(true));
     }
@@ -252,7 +252,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfo.isLeft(), is(true));
     }
 
@@ -269,7 +269,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfo.isLeft(), is(true));
     }
 
@@ -302,7 +302,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Tuple2<String, String> pathComponents = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator)
+        Tuple2<String, String> pathComponents = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator)
                 .get().getPathComponents(fullCurrentPath);
 
         assertThat(pathComponents._1, is("C:\\Users\\me\\Desktop\\"));
@@ -336,7 +336,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Tuple2<String, String> pathComponents = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator)
+        Tuple2<String, String> pathComponents = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator)
                 .get().getPathComponents(fullCurrentPath);
 
         assertThat(pathComponents._1, is("/home/me/work/"));
@@ -369,7 +369,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Tuple2<String, String> pathComponents = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator)
+        Tuple2<String, String> pathComponents = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator)
                 .get().getPathComponents(backupRootPath);
 
         assertThat(pathComponents._1, is("F:\\"));
@@ -401,7 +401,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Tuple2<String, String> pathComponents = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator)
+        Tuple2<String, String> pathComponents = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator)
                 .get().getPathComponents(backupRootPath);
 
         assertThat(pathComponents._1, is("/media/"));
@@ -433,7 +433,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Tuple2<String, String> pathComponents = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator)
+        Tuple2<String, String> pathComponents = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator)
                 .get().getPathComponents(backupRootPath);
 
         assertThat(pathComponents._1, is("F:\\FolderA\\FolderB\\"));
@@ -466,7 +466,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Tuple2<String, String> pathComponents = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator)
+        Tuple2<String, String> pathComponents = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator)
                 .get().getPathComponents(backupRootPath);
 
         assertThat(pathComponents._1, is("/media/me/USB DISK/FolderA/FolderB/"));
@@ -490,7 +490,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
 
         assertThat(filePathInfo.get().fromCurrentToBackupPath(fullCurrentPath).toString(), is(expectedPathString));
     }
@@ -512,7 +512,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
 
         assertThat(filePathInfo.get().fromCurrentToBackupPath(fullCurrentPath).toString(), is(expectedPathString));
     }
@@ -541,7 +541,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
 
         assertThat(filePathInfo.get().fromCurrentToBackupPath(fullCurrentPath).toString(), is(expectedPathString));
     }
@@ -570,7 +570,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
 
         assertThat(filePathInfo.get().fromCurrentToBackupPath(fullCurrentPath).toString(), is(expectedPathString));
     }
@@ -592,7 +592,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
 
         assertThat(filePathInfo.get().fromBackupToCurrentPath(fullBackupPath).toString(), is(expectedPathString));
     }
@@ -614,7 +614,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
 
         assertThat(filePathInfo.get().fromBackupToCurrentPath(fullBackupPath).toString(), is(expectedPathString));
     }
@@ -645,7 +645,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
 
         assertThat(filePathInfo.get().fromBackupToCurrentPath(fullBackupPath).toString(), is(expectedPathString));
     }
@@ -676,7 +676,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfo = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
 
         assertThat(filePathInfo.get().fromBackupToCurrentPath(fullBackupPath).toString(), is(expectedPathString));
     }
@@ -696,7 +696,7 @@ public class FilePathInfoTest {
 
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
-        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfoEither.isRight(), is(true));
 
         Path fullPath = Paths.get("C:\\Users\\me\\Desktop\\" + rootDirectory + "\\special\\superSpecial\\ultraSpecial");
@@ -727,7 +727,7 @@ public class FilePathInfoTest {
 
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
-        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfoEither.isRight(), is(true));
 
         Path fullPath = Paths.get("/home/me/work/" + rootDirectory + "/special/superSpecial/ultraSpecial");
@@ -761,7 +761,7 @@ public class FilePathInfoTest {
 
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
-        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfoEither.isRight(), is(true));
 
         Path fullPath = Paths.get("C:\\Users\\me\\Desktop\\" + rootDirectory + "\\stuff");
@@ -794,7 +794,7 @@ public class FilePathInfoTest {
 
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
-        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfoEither.isRight(), is(true));
 
         Path fullPath = Paths.get("/home/me/work/" + rootDirectory + "/stuff");
@@ -827,7 +827,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfoEither.isRight(), is(true));
 
         Path fullPath = Paths.get("C:\\Users\\me\\Desktop\\" + rootDirectory);
@@ -854,7 +854,7 @@ public class FilePathInfoTest {
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
 
-        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfoEither.isRight(), is(true));
 
         Path fullPath = Paths.get("/home/me/work/" + rootDirectory);
@@ -878,7 +878,7 @@ public class FilePathInfoTest {
 
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
-        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfoEither.isRight(), is(true));
 
         Path fullPath = Paths.get("C:\\Users\\me\\Desktop\\" + rootDirectory + "\\special\\superSpecial\\ultraSpecial\\document.txt");
@@ -910,7 +910,7 @@ public class FilePathInfoTest {
 
         Mockito.when(validator.fileExists(currentWorkingRootPath)).thenReturn(true);
         Mockito.when(validator.fileExists(backupRootPath)).thenReturn(true);
-        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, validator);
+        Either<String, FilePathInfo> filePathInfoEither = FilePathInfo.of(currentWorkingRootPath, backupRootPath, false, validator);
         assertThat(filePathInfoEither.isRight(), is(true));
 
         Path fullPath = Paths.get("/home/me/work/" + rootDirectory + "/special/superSpecial/ultraSpecial/document.txt");

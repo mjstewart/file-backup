@@ -57,6 +57,8 @@ public class PathSetupView extends StyledVBox {
 
     private Button buttonManualConfigurationRun;
 
+    private CheckBox checkBoxSymbolicLinks;
+
     // Populated when DirectoryChooser is invoked.
     private File backupFile;
     private File currentWorkingFile;
@@ -126,6 +128,11 @@ public class PathSetupView extends StyledVBox {
         backupPathColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getBackupDirectoryPath().toString()));
         backupPathColumn.setCellFactory(param -> TableCellFactory.defaultTableCell());
 
+        TableColumn<TaskSetting, String> followSymLinksColumn = new TableColumn<>("Follow Sym Links");
+        followSymLinksColumn.setCellValueFactory(param -> param.getValue().isFollowSymlinks() ?
+                new SimpleStringProperty("Yes") : new SimpleStringProperty("No"));
+        followSymLinksColumn.setCellFactory(param -> TableCellFactory.defaultTableCell());
+
         TableColumn<TaskSetting, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(param -> {
             Either<String, FilePathInfo> status = param.getValue().status();
@@ -157,6 +164,7 @@ public class PathSetupView extends StyledVBox {
         tableView.getColumns().add(taskDescriptionColumn);
         tableView.getColumns().add(currentPathColumn);
         tableView.getColumns().add(backupPathColumn);
+        tableView.getColumns().add(followSymLinksColumn);
         tableView.getColumns().add(statusColumn);
         tableView.getColumns().add(runColumn);
 
@@ -191,11 +199,15 @@ public class PathSetupView extends StyledVBox {
         grid.add(textBackupFilePath, 0, 3);
         grid.add(textBackupDirectoryValidation, 1, 3);
 
+        checkBoxSymbolicLinks = new CheckBox("Follow symbolic links");
+        checkBoxSymbolicLinks.setSelected(true);
+        grid.add(checkBoxSymbolicLinks, 0, 4);
+
         textFinalValidation = new Label();
         textFinalValidation.getStyleClass().setAll("invalid-validation-text");
         GridPane.setMargin(textFinalValidation, new Insets(5, 0, 0, 0));
 
-        grid.add(textFinalValidation, 0, 4);
+        grid.add(textFinalValidation, 0, 5);
         GridPane.setColumnSpan(textFinalValidation, GridPane.REMAINING);
         GridPane.setHalignment(textFinalValidation, HPos.CENTER);
 
@@ -203,7 +215,7 @@ public class PathSetupView extends StyledVBox {
         buttonManualConfigurationRun.setDisable(true);
         // Caller will come back in to this instance and get the selected filePathInfo.
         buttonManualConfigurationRun.setOnAction(e -> ControlUtil.fadeOutThen(this, event -> stage.close()));
-        grid.add(buttonManualConfigurationRun, 0, 5);
+        grid.add(buttonManualConfigurationRun, 0, 6);
 
         GridPane.setColumnSpan(buttonManualConfigurationRun, GridPane.REMAINING);
         GridPane.setHalignment(buttonManualConfigurationRun, HPos.CENTER);
@@ -258,7 +270,8 @@ public class PathSetupView extends StyledVBox {
                 textFinalValidation.setText("There could be issues with your file system, try rebooting");
                 buttonManualConfigurationRun.setDisable(true);
             } else {
-                filePathInfo = FilePathInfo.of(currentWorkingFile.toPath(), backupFile.toPath(), new FileValidator());
+                filePathInfo = FilePathInfo.of(currentWorkingFile.toPath(), backupFile.toPath(),
+                        checkBoxSymbolicLinks.isSelected(), new FileValidator());
 
                 if (filePathInfo.isLeft()) {
                     textFinalValidation.setText(filePathInfo.getLeft());

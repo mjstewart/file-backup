@@ -48,6 +48,9 @@ public class FilePathInfo {
     @Column(nullable = false)
     private String rootDirectoryName;
 
+    @Column(nullable = false)
+    private boolean followSymlinks;
+
     private static final PathMappingStrategy pathMappingStrategy = PathMappingStrategy.create();
 
     /**
@@ -67,10 +70,19 @@ public class FilePathInfo {
         return rootDirectoryName;
     }
 
-    private FilePathInfo(Path currentWorkingRootPath, Path backupRootPath, String rootDirectoryName) {
+    /**
+     * @return If {@code true}, {@code ModifiedFileCollector} and {@code DirectoryWatcher} follow symbolic links when
+     * performing a file walk.
+     */
+    public boolean isFollowSymlinks() {
+        return followSymlinks;
+    }
+
+    private FilePathInfo(Path currentWorkingRootPath, Path backupRootPath, String rootDirectoryName, boolean followSymlinks) {
         this.currentWorkingRootPath = currentWorkingRootPath;
         this.backupRootPath = backupRootPath;
         this.rootDirectoryName = rootDirectoryName;
+        this.followSymlinks = followSymlinks;
     }
 
     @Override
@@ -80,6 +92,7 @@ public class FilePathInfo {
 
         FilePathInfo that = (FilePathInfo) o;
 
+        if (followSymlinks != that.followSymlinks) return false;
         if (currentWorkingRootPath != null ? !currentWorkingRootPath.equals(that.currentWorkingRootPath) : that.currentWorkingRootPath != null)
             return false;
         if (backupRootPath != null ? !backupRootPath.equals(that.backupRootPath) : that.backupRootPath != null)
@@ -92,6 +105,7 @@ public class FilePathInfo {
         int result = currentWorkingRootPath != null ? currentWorkingRootPath.hashCode() : 0;
         result = 31 * result + (backupRootPath != null ? backupRootPath.hashCode() : 0);
         result = 31 * result + (rootDirectoryName != null ? rootDirectoryName.hashCode() : 0);
+        result = 31 * result + (followSymlinks ? 1 : 0);
         return result;
     }
 
@@ -102,10 +116,13 @@ public class FilePathInfo {
      *
      * @param currentWorkingRootPath The current working root directory.
      * @param backupRootPath The backup root directory.
+     * @param followSymlinks {@code true} to allow following symbolic links during {@code ModifiedFileCollector} file walk.
      * @param fileValidator How to validate if a {@code File} exists.
      * @return {@code Either.Left} explaining the error otherwise {@code Either.Right} contains a valid {@code FilePathInfo}.
      */
-    public static Either<String, FilePathInfo> of(Path currentWorkingRootPath, Path backupRootPath, FileValidator fileValidator) {
+    public static Either<String, FilePathInfo> of(Path currentWorkingRootPath, Path backupRootPath,
+                                                  boolean followSymlinks,
+                                                  FileValidator fileValidator) {
         if (currentWorkingRootPath == null || backupRootPath == null) {
             return Either.left("Both paths to check must be non null");
         }
@@ -120,7 +137,7 @@ public class FilePathInfo {
         }
         Either<String, String> matchingRootDirectory = getMatchingRootDirectory(currentWorkingRootPath, backupRootPath);
         return matchingRootDirectory
-                .map(rootDirectoryName -> new FilePathInfo(currentWorkingRootPath, backupRootPath, rootDirectoryName))
+                .map(rootDirectoryName -> new FilePathInfo(currentWorkingRootPath, backupRootPath, rootDirectoryName, followSymlinks))
                 .orElse(() -> Either.left(matchingRootDirectory.getLeft()));
     }
 

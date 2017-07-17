@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -33,7 +34,8 @@ import static java.nio.file.StandardWatchEventKinds.*;
  * highlights that windows is a limitation since it wont let you rename/delete/move directories because registering
  * a the directory locks it. Any file operations is fine its just directories which is the issue.
  * Also on mac os there is no event system, the implementation just polls the entire filesystem periodically so its
- * VERY SLOW and doing a manual backup would be faster. Not sure about linux, linux might have no issues.</p>
+ * VERY SLOW and doing a manual backup would be faster. Linux seems to be the best operating system for every feature
+ * running as intended.</p>
  *
  * The {@code DirectoryWatcher} forms the strategy to detect if a whole directory can be skipped when running the backup.
  * During the day when live monitoring is on, this watcher runs in a separate thread listening for events for each
@@ -175,6 +177,20 @@ public class DirectoryWatcher implements Runnable, Publisher<LogMessage>, Shutdo
         }
     }
 
+    @Override
+    public void stop() {
+        /*
+         * All existing keys must be cancelled as its possible for 'this' DirectoryWatcher instance to still be
+         * alive in the UI but the keys are still registered to the underlying native WatchService. By cancelling
+         * each existing key, if another DirectoryWatcher is created then we start from scratch each time. If this
+         * isn't done existing watch keys will hang around and there will be invalid watch key errors when registerAll
+         * tries to register the directory to the WatchService again.
+         */
+        keys.forEach((key, path) -> key.cancel());
+        sendLogMessage(new LogMessage(Level.WARNING, "DirectoryWatcher has received a request to stop"));
+        running.set(false);
+    }
+
     /**
      * Register the given directory, and all its sub-directories, with the WatchService.
      *
@@ -183,21 +199,32 @@ public class DirectoryWatcher implements Runnable, Publisher<LogMessage>, Shutdo
      */
     private void registerAll(Path startDirectory) throws Exception {
         // register directory and sub-directories
-        Files.walkFileTree(startDirectory, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
-                    throws IOException {
-                WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-                keys.put(key, dir);
-                return FileVisitResult.CONTINUE;
-            }
-        });
+        if (filePathInfo.isFollowSymlinks()) {
+            EnumSet<FileVisitOption> opts = EnumSet.of(FOLLOW_LINKS);
+            Files.walkFileTree(startDirectory, opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+                        throws IOException {
+                    WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+                    keys.put(key, dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } else {
+            Files.walkFileTree(startDirectory, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+                        throws IOException {
+                    WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+                    keys.put(key, dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
     }
 
-    public void stop() {
-        sendLogMessage(new LogMessage(Level.WARNING, "DirectoryWatcher has received a request to stop"));
-        running.set(false);
-    }
+
+
 
     @Override
     public void run() {
@@ -270,14 +297,23 @@ public class DirectoryWatcher implements Runnable, Publisher<LogMessage>, Shutdo
             boolean valid = key.reset();
             if (!valid) {
                 /*
-                 * If a directory is deleted, WatchKeys for sub directories are automatically cancelled. But based on
-                 * the WatchService docs it can be cancelled when the file system is no longer accessible. What the
-                 * definition of this is unknown so I guess there could be a legitimate issue which would make the
-                 * backup at risk of losing data still...
-                 * I've tested deleting sub directories and this appears to work as intended so the backup is still
-                 * safe given all that is happening is WatchKeys for deleted directories and being destroyed which is fine.
+                 * What an invalid watch key means is unknown...
+                 *
+                 * Based on the WatchService docs, the watch key can be cancelled when the file system is no longer accessible.
+                 * The definition of this is unknown so there could be a legitimate issue which would make the backup
+                 * at risk of losing data.
+                 *
+                 * The main use of checking if a key is invalid seems to be on directory deletion where WatchKeys
+                 * for sub directories are automatically cancelled correctly on linux but when it comes to Windows
+                 * there are issues in deleting directories. Its not advised to use live monitoring on windows
+                 * if deleted files need to be tracked.
+                 *
+                 * In other words, logging severe will stop the backup from occurring as its not really clear that
+                 * the backup is still ok, it could be but then again a key for a directory could be invalid but
+                 * the directory has not been deleted which will result in no files being monitored for that directory
+                 * resulting in potential loss of data.
                  */
-                sendLogMessage(new LogMessage(Level.WARNING, "WatchKey for "  + dir + " is invalid since this path has likely been deleted" +
+                sendLogMessage(new LogMessage(Level.SEVERE, "WatchKey for "  + dir + " is invalid" +
                         ", no more events will be received for this path"));
                 keys.remove(key);
 

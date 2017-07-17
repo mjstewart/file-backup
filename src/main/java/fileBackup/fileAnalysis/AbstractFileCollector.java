@@ -4,6 +4,7 @@ import fileBackup.backupExecution.directoryFilters.DirectoryFilter;
 import io.vavr.control.Either;
 
 import java.io.File;
+import java.nio.file.Files;
 
 /**
  * @param <R> The type of {@code FileAnalysisResult} used when collecting files.
@@ -24,6 +25,9 @@ public abstract class AbstractFileCollector<R extends FileAnalysisResult> {
     protected FileType toFileType(File file) {
         if (file.isFile()) {
             return FileType.File;
+        }
+        if (Files.isSymbolicLink(file.toPath())) {
+            return FileType.Symbolic;
         }
         if (file.isDirectory()) {
             return FileType.Directory;

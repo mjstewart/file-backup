@@ -387,7 +387,7 @@ public class HomeView extends StyledBorderPane implements Shutdownable {
             monitoringLogPane = new MonitoringLogPane(logMessages);
 
             // Try register all directories for monitoring.
-            DirectoryWatcherRegistrationTask registrationTask = new DirectoryWatcherRegistrationTask(new DirectoryWatcher(filePathInfo));
+            DirectoryWatcherRegistrationTask registrationTask = new DirectoryWatcherRegistrationTask(filePathInfo);
             menuPanel.bindDisableProperty(registrationTask.runningProperty());
             bindDisableProperty(registrationTask.runningProperty());
             topPanel.progressStatus.start("Setting up file system for live monitoring", registrationTask.runningProperty());

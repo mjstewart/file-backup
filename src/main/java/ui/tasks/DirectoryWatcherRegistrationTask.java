@@ -1,6 +1,7 @@
 package ui.tasks;
 
 import fileBackup.fileAnalysis.FileAccessError;
+import fileBackup.fileAnalysis.FilePathInfo;
 import fileBackup.monitoring.DirectoryWatcher;
 import io.vavr.control.Either;
 import javafx.concurrent.Task;
@@ -14,8 +15,8 @@ public class DirectoryWatcherRegistrationTask extends Task<Either<FileAccessErro
 
     private DirectoryWatcher directoryWatcher;
 
-    public DirectoryWatcherRegistrationTask(DirectoryWatcher directoryWatcher) {
-        this.directoryWatcher = directoryWatcher;
+    public DirectoryWatcherRegistrationTask(FilePathInfo filePathInfo) {
+        this.directoryWatcher = new DirectoryWatcher(filePathInfo);
     }
 
     @Override
