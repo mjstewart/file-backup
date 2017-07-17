@@ -27,6 +27,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import settings.ApplicationSettings;
 import ui.tasks.Shutdownable;
@@ -254,6 +255,8 @@ public class HomeView extends StyledBorderPane implements Shutdownable {
                     getAllTablesTask.setOnSucceeded(value -> checkPreviousMonitoringSession(filePathInfo, getAllTablesTask.getValue()));
 
                     FileBackupExecutorService.getInstance().get().submit(getAllTablesTask);
+                } else {
+                    disable(false);
                 }
             });
         }
@@ -265,6 +268,12 @@ public class HomeView extends StyledBorderPane implements Shutdownable {
 
             boolean existingFiles = eitherAllFiles.isRight() && !eitherAllFiles.get().isEmpty();
             boolean existingLogs = eitherAllLogs.isRight() && !eitherAllLogs.get().isEmpty();
+
+            /*
+             * The only time a new monitoring session won't be created is when there is a previous monitoring
+             * session saved and the user presses OK in the below Alert in which case the previous session is restored.
+             */
+            boolean createNewMonitoringSession = true;
 
             /*
              * If true, db contains monitored files but if db cannot be accessed just wipe it clean and start new session.
@@ -279,34 +288,35 @@ public class HomeView extends StyledBorderPane implements Shutdownable {
 
                     String message = "Previous file changes have been detected.\n\n" +
                             "If you have not modified any files since the last file monitoring session, " +
-                            "press ok to resume where you left off. Otherwise press no to start a new session.";
+                            "press 'OK' to resume where you left off. Otherwise press 'New' to start a new session.";
 
-                    Optional<ButtonType> action = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK, ButtonType.NO)
+                    Optional<ButtonType> action = new Alert(Alert.AlertType.CONFIRMATION, message,
+                            ButtonType.OK, new ButtonType("New"), ButtonType.CANCEL)
                             .showAndWait();
 
                     if (action.isPresent()) {
-                        // Cant use lambda pipeline as instance variable needs setting plus have to handle cancel Alert flow.
                         ButtonType buttonType = action.get();
 
-                        if (buttonType == ButtonType.NO) {
-                            if (createNewMonitoringSession(filePathInfo)) {
-                                liveMonitoringView = new LiveMonitoringView(filePathInfo);
-                            }
-                        }
+                        // Nothing is needed for 'New' as it falls through to createNewMonitoringSession=true.
                         if (buttonType == ButtonType.OK) {
+                            createNewMonitoringSession = false;
                             liveMonitoringView = new LiveMonitoringView(filePathInfo, eitherAllLogs.get());
+                        }
+                        if (buttonType == ButtonType.CANCEL) {
+                            createNewMonitoringSession = false;
                         }
                     }
                 }
-            } else if (createNewMonitoringSession(filePathInfo)) {
-                // Issues accessing db, wipe clean and start again
+            }
+
+            if (createNewMonitoringSession && createNewMonitoringSession(filePathInfo)) {
                 liveMonitoringView = new LiveMonitoringView(filePathInfo);
             }
 
             /*
              * Will be null under the following conditions.
              * 1. PathSetupView did not return a valid path
-             * 2. Cancel is pressed in an Alert model window
+             * 2. Cancel or close X is pressed in an Alert model window
              * 3. createNewMonitoringSession returns false indicating failure
              */
             if (liveMonitoringView != null) {
