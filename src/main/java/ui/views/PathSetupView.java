@@ -112,7 +112,7 @@ public class PathSetupView extends StyledVBox {
                         }));
 
         if (backupTaskSettings.isFailure()) {
-            titledPane.setContent(ControlUtil.getBasicErrorComponent("Unable to load backup configuration due to missing or invalid syntax"));
+            titledPane.setContent(ControlUtil.getBasicErrorComponent("Unable to load configuration '" + ApplicationSettings.getTasksPath() + "' due to missing or invalid syntax"));
             return titledPane;
         }
 
