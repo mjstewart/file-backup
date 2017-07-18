@@ -15,18 +15,41 @@ import java.util.function.Supplier;
 public class TimeUtils {
 
     public static String prettyTimeBetween(Instant start, Instant end) {
-        long hours = ChronoUnit.HOURS.between(start, end) % 24;
-        long mins = ChronoUnit.MINUTES.between(start, end) % 60;
-        long secs = ChronoUnit.SECONDS.between(start, end) % 60;
+        if (start.equals(end)) {
+            return "Modified times are equal";
+        }
+
+        LocalDateTime startTime = LocalDateTime.ofInstant(start, ZoneId.systemDefault());
+        LocalDateTime endTime = LocalDateTime.ofInstant(end, ZoneId.systemDefault());
+
+        long years = ChronoUnit.YEARS.between(startTime, endTime);
+        long months = ChronoUnit.MONTHS.between(startTime, endTime);
+        long weeks = ChronoUnit.WEEKS.between(startTime, endTime);
+        long days = ChronoUnit.DAYS.between(startTime, endTime);
+        long hours = ChronoUnit.HOURS.between(startTime, endTime) % 24;
+        long mins = ChronoUnit.MINUTES.between(startTime, endTime) % 60;
+        long secs = ChronoUnit.SECONDS.between(startTime, endTime) % 60;
+
+        if (years == 1) return "About " + years + " year";
+        if (years > 1) return "About " + years + " years";
+
+        if (months == 1) return "About " + months + " month";
+        if (months > 1) return "About " + months + " months";
+
+        if (weeks == 1) return "About " + weeks + " week";
+        if (weeks > 1) return "About " + weeks + " weeks";
+
+        if (days == 1) return "About " + days + " day";
+        if (days > 1) return "About " + days + " days";
 
         if (hours == 1) return "About " + hours + " hour";
         if (hours > 1) return "About " + hours + " hours";
 
         StringBuilder sb = new StringBuilder();
         sb.append("About ");
-        if (mins == 1) sb.append(mins).append("min ");
-        if (mins > 1) sb.append(mins).append(" mins ");
-        if (secs == 1) sb.append("1 sec");
+        if (mins == 1) sb.append(mins).append(" min");
+        if (mins > 1) sb.append(mins).append(" mins");
+        if (secs == 1) sb.append(secs).append(" sec");
         if (secs > 1) sb.append(secs).append(" secs");
 
         return sb.toString();
