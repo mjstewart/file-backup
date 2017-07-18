@@ -155,6 +155,10 @@ public class DirectoryWatcher implements Runnable, Publisher<LogMessage>, Shutdo
         }
     }
 
+    private String surroundInQuotes(String value) {
+        return "\"" + value + "\"";
+    }
+
     @Override
     public void addSubscriber(Subscriber<LogMessage> subscriber) {
         subscribers.add(subscriber);
@@ -245,6 +249,7 @@ public class DirectoryWatcher implements Runnable, Publisher<LogMessage>, Shutdo
             }
 
             Path dir = keys.get(key);
+
             if (dir == null) {
                 sendLogMessage(new LogMessage(Level.SEVERE, "No WatchKey found for received key. A directory " +
                         "may not have been registered correctly or was cancelled"));
@@ -277,11 +282,11 @@ public class DirectoryWatcher implements Runnable, Publisher<LogMessage>, Shutdo
                     try {
                         if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
                             registerAll(child);
-                            sendLogMessage(new LogMessage(Level.INFO, "New directory " + child
+                            sendLogMessage(new LogMessage(Level.INFO, "New directory " + surroundInQuotes(child.toString())
                                     + " created and is now being monitored"));
                         }
                     } catch (Exception x) {
-                        sendLogMessage(new LogMessage(Level.SEVERE, "New directory " + child
+                        sendLogMessage(new LogMessage(Level.SEVERE, "New directory " + surroundInQuotes(child.toString())
                                 + " created but all its containing directories could not be registered for monitoring"));
                     }
                 }
@@ -310,7 +315,7 @@ public class DirectoryWatcher implements Runnable, Publisher<LogMessage>, Shutdo
                  * the directory has not been deleted which will result in no files being monitored for that directory
                  * resulting in potential loss of data.
                  */
-                sendLogMessage(new LogMessage(Level.SEVERE, "WatchKey for "  + dir + " is invalid" +
+                sendLogMessage(new LogMessage(Level.SEVERE, "WatchKey for "  + surroundInQuotes(dir.toString()) + " is invalid" +
                         ", no more events will be received for this path"));
                 keys.remove(key);
 
@@ -385,7 +390,7 @@ public class DirectoryWatcher implements Runnable, Publisher<LogMessage>, Shutdo
                 Files.walkFileTree(path, directoryPathFinder);
                 childPaths = directoryPathFinder.directories;
             } catch (IOException e) {
-                sendLogMessage(new LogMessage(Level.SEVERE, "Unable to read directory contents for " + path));
+                sendLogMessage(new LogMessage(Level.SEVERE, "Unable to read directory contents for " + surroundInQuotes(path.toString())));
                 return;
             }
         }
@@ -396,9 +401,9 @@ public class DirectoryWatcher implements Runnable, Publisher<LogMessage>, Shutdo
         allPathsSet.removeAll(existingWatchedFilesSet);
 
         if (FileBackupRepository.saveAll(allPathsSet)) {
-            sendLogMessage(new LogMessage(Level.INFO, "File modification activity detected for " + path));
+            sendLogMessage(new LogMessage(Level.INFO, "File modification activity detected for " + surroundInQuotes(path.toString())));
         } else {
-            sendLogMessage(new LogMessage(Level.SEVERE, "Unable to save modified file activity for " + path));
+            sendLogMessage(new LogMessage(Level.SEVERE, "Unable to save modified file activity for " + surroundInQuotes(path.toString())));
         }
     }
 
