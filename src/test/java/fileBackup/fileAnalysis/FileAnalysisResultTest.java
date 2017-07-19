@@ -11,25 +11,25 @@ import static org.junit.Assert.assertThat;
  */
 public class FileAnalysisResultTest {
 
-    private FileChangeResult fileChangeResult;
+    private ModifiedFileWalkerResult modifiedFileWalkerResult;
 
     @Before
     public void setUp() {
-        fileChangeResult = new FileChangeResult();
+        modifiedFileWalkerResult = new ModifiedFileWalkerResult();
     }
 
     @Test
     public void incrementTotalFilesScanned() {
-        fileChangeResult.incrementTotalFilesScanned();
-        fileChangeResult.incrementTotalFilesScanned();
-        assertThat(fileChangeResult.getTotalFilesScanned(), is(2L));
+        modifiedFileWalkerResult.incrementTotalFilesScanned();
+        modifiedFileWalkerResult.incrementTotalFilesScanned();
+        assertThat(modifiedFileWalkerResult.getTotalFilesScanned(), is(2L));
     }
 
     @Test
     public void incrementTotalDirectoriesScanned() {
-        fileChangeResult.incrementTotalDirectoriesScanned();
-        fileChangeResult.incrementTotalDirectoriesScanned();
-        assertThat(fileChangeResult.getTotalDirectoriesScanned(), is(2L));
+        modifiedFileWalkerResult.incrementTotalDirectoriesScanned();
+        modifiedFileWalkerResult.incrementTotalDirectoriesScanned();
+        assertThat(modifiedFileWalkerResult.getTotalDirectoriesScanned(), is(2L));
     }
 
 }

@@ -1,13 +1,10 @@
 package fileBackup.fileAnalysis;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Created by matt on 30-Jun-17.
@@ -47,8 +44,8 @@ public class TimeUtils {
 
         StringBuilder sb = new StringBuilder();
         sb.append("About ");
-        if (mins == 1) sb.append(mins).append(" min");
-        if (mins > 1) sb.append(mins).append(" mins");
+        if (mins == 1) sb.append(mins).append(" min ");
+        if (mins > 1) sb.append(mins).append(" mins ");
         if (secs == 1) sb.append(secs).append(" sec");
         if (secs > 1) sb.append(secs).append(" secs");
 

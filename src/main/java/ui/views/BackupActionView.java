@@ -51,6 +51,7 @@ public class BackupActionView extends StyledVBox {
     private final Either<TaskFailureError, FileSystemScanResult> eitherFileSystemScanResult;
     private Button buttonExecuteBackup;
 
+    private TitledPane fileSystemScanStatisticsPane;
     private TitledPane filesReadyForBackupPane;
     private TitledPane errorPane;
 
@@ -88,15 +89,18 @@ public class BackupActionView extends StyledVBox {
         /*
          * Always show the files ready for backup pane even if there are 0 results. The title displays the number
          * of results which provides feedback to the user rather than creating a new label to display a 0 result message.
+         * If there are results then the table view is added as the content.
          */
         filesReadyForBackupPane = new TitledPane();
         filesReadyForBackupPane.setText("Files ready for backup (" + fileSystemScanResults.size() + ")");
         filesReadyForBackupPane.setExpanded(false);
-        HBox.setHgrow(filesReadyForBackupPane, Priority.ALWAYS);
 
         /*
+         * If no scan results exist, only the files ready for backup titled pane shows.
+         *
          * If file scan results exist, add in the FileSystemScanResultsTable into the titled pane. A button to execute
-         * the backup is also added in as the first control in this view.
+         * the backup is also added in as the first control in this view. Additional statistic titled pane is also
+         * included.
          *
          * It is decided to allow the backup to occur if there are errors. Its just that only the FileChangeRecords
          * displayed in FileSystemScanResultsTable will be executed in the backup. This allows the user to perform
@@ -132,8 +136,20 @@ public class BackupActionView extends StyledVBox {
                 selectedButton.ifPresent(b -> executeBackup());
             });
 
+
             getChildren().add(buttonExecuteBackup);
+
+            if (eitherFileSystemScanResult.get().getModifiedFileResult().isRight() &&
+                    eitherFileSystemScanResult.get().getDeletedFileResult().isRight()) {
+                fileSystemScanStatisticsPane = new FileSystemScanStatisticsPane(eitherFileSystemScanResult.get());
+            }
+
+            if (fileSystemScanStatisticsPane != null) {
+                getChildren().add(fileSystemScanStatisticsPane);
+            }
+
             getChildren().add(filesReadyForBackupPane);
+            ControlUtil.fadeIn(fileSystemScanStatisticsPane);
             ControlUtil.fadeIn(filesReadyForBackupPane);
             ControlUtil.fadeIn(buttonExecuteBackup);
         }
@@ -152,6 +168,9 @@ public class BackupActionView extends StyledVBox {
 
         // Expand panes once populated for ui feedback
         ControlUtil.doAfterDelay(Duration.millis(500), e -> {
+            if (fileSystemScanStatisticsPane != null) {
+                fileSystemScanStatisticsPane.setExpanded(true);
+            }
             if (!fileSystemScanResults.isEmpty() && filesReadyForBackupPane != null) {
                 filesReadyForBackupPane.setExpanded(true);
             }
@@ -159,6 +178,71 @@ public class BackupActionView extends StyledVBox {
                 errorPane.setExpanded(true);
             }
         });
+    }
+
+    /**
+     * Displays file system analysis statistics. getModifiedFileResult and getDeletedFileResult are available as they
+     * are verified prior to constructing an instance in the BackupActionView constructor.
+     */
+    private class FileSystemScanStatisticsPane extends TitledPane {
+        private FileSystemScanStatisticsPane(FileSystemScanResult fileSystemScanResult) {
+            TableColumn<FileSystemScanResult, String> filesScannedColumn = new TableColumn<>("Files scanned");
+            filesScannedColumn.setCellValueFactory(param ->
+                    new SimpleStringProperty(param.getValue().getModifiedFileResult().get().getTotalFilesScanned() + ""));
+            filesScannedColumn.setCellFactory(param -> TableCellFactory.defaultTableCell());
+
+            TableColumn<FileSystemScanResult, String> directoriesScannedColumn = new TableColumn<>("Directories scanned");
+            directoriesScannedColumn.setCellValueFactory(param ->
+                    new SimpleStringProperty(param.getValue().getModifiedFileResult().get().getTotalDirectoriesScanned() + ""));
+            directoriesScannedColumn.setCellFactory(param -> TableCellFactory.defaultTableCell());
+
+            TableColumn<FileSystemScanResult, String> newFilesColumn = new TableColumn<>("New files");
+            newFilesColumn.setCellValueFactory(param ->
+                    new SimpleStringProperty(param.getValue().getModifiedFileResult().get().getTotalNewFiles() + ""));
+            newFilesColumn.setCellFactory(param -> TableCellFactory.defaultTableCell());
+
+            TableColumn<FileSystemScanResult, String> newDirectoriesColumn = new TableColumn<>("New directories");
+            newDirectoriesColumn.setCellValueFactory(param ->
+                    new SimpleStringProperty(param.getValue().getModifiedFileResult().get().getTotalNewDirectories() + ""));
+            newDirectoriesColumn.setCellFactory(param -> TableCellFactory.defaultTableCell());
+
+            TableColumn<FileSystemScanResult, String> filesModifiedColumn = new TableColumn<>("Files modified");
+            filesModifiedColumn.setCellValueFactory(param ->
+                    new SimpleStringProperty(param.getValue().getModifiedFileResult().get().getTotalFilesModified() + ""));
+            filesModifiedColumn.setCellFactory(param -> TableCellFactory.defaultTableCell());
+
+            TableColumn<FileSystemScanResult, String> filesUnmodifiedColumn = new TableColumn<>("Files unmodified");
+            filesUnmodifiedColumn.setCellValueFactory(param ->
+                    new SimpleStringProperty(param.getValue().getModifiedFileResult().get().getTotalFilesUnmodified() + ""));
+            filesUnmodifiedColumn.setCellFactory(param -> TableCellFactory.defaultTableCell());
+
+            TableColumn<FileSystemScanResult, String> filesDeletedColumn = new TableColumn<>("Files deleted");
+            filesDeletedColumn.setCellValueFactory(param ->
+                    new SimpleStringProperty(param.getValue().getDeletedFileResult().get().getTotalFilesDeleted() + ""));
+            filesDeletedColumn.setCellFactory(param -> TableCellFactory.defaultTableCell());
+
+            TableColumn<FileSystemScanResult, String> directoriesDeletedColumn = new TableColumn<>("Directories deleted");
+            directoriesDeletedColumn.setCellValueFactory(param ->
+                    new SimpleStringProperty(param.getValue().getDeletedFileResult().get().getTotalDirectoriesDeleted() + ""));
+            directoriesDeletedColumn.setCellFactory(param -> TableCellFactory.defaultTableCell());
+
+            FormattedTableView<FileSystemScanResult> tableView = new FormattedTableView<>();
+
+            tableView.getColumns().add(filesScannedColumn);
+            tableView.getColumns().add(directoriesScannedColumn);
+            tableView.getColumns().add(newFilesColumn);
+            tableView.getColumns().add(newDirectoriesColumn);
+            tableView.getColumns().add(filesModifiedColumn);
+            tableView.getColumns().add(filesUnmodifiedColumn);
+            tableView.getColumns().add(filesDeletedColumn);
+            tableView.getColumns().add(directoriesDeletedColumn);
+
+            tableView.setItems(FXCollections.observableArrayList(fileSystemScanResult));
+
+            setExpanded(false);
+            setText("Statistics");
+            setContent(tableView);
+        }
     }
 
     /**
@@ -253,7 +337,7 @@ public class BackupActionView extends StyledVBox {
      * <p>For example, {@code ModifiedFileCollector} could have failed to run resulting in
      * {@code FileSystemScanResult.modifiedFileResult} containing the error in Either.left. However if
      * {@code ModifiedFileCollector} was able to run, there can be potential errors during the file walking process which
-     * are available by accessing Either.right to get access to the {@code FileChangeResult} which contains any
+     * are available by accessing Either.right to get access to the {@code ModifiedFileWalkerResult} which contains any
      * errors generated during the walking phase. This same logic is applied to the deleted file scan process.</p>
      *
      * @param result The {@code FileSystemScanResult}.

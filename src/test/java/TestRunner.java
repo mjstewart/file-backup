@@ -1,5 +1,5 @@
 import fileBackup.fileAnalysis.FileAnalysisResultTest;
-import fileBackup.fileAnalysis.FileChangeResultTest;
+import fileBackup.fileAnalysis.ModifiedFileWalkerResultTest;
 import fileBackup.fileAnalysis.FilePathInfoTest;
 import fileBackup.monitoring.pathMapping.PathMappingStrategyTest;
 import fileBackup.monitoring.pathMapping.CurrentToBackupPathMappingTest;
@@ -12,7 +12,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         FileAnalysisResultTest.class,
-        FileChangeResultTest.class,
+        ModifiedFileWalkerResultTest.class,
         FilePathInfoTest.class,
         PathMappingStrategyTest.class,
         CurrentToBackupPathMappingTest.class

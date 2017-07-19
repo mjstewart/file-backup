@@ -34,10 +34,10 @@ public class FileCollectorTask extends Task<FileSystemScanResult> {
     protected FileSystemScanResult call() throws Exception {
         ExecutorService executorService = FileBackupExecutorService.getInstance().get();
 
-        CompletableFuture<Either<FileAccessError, FileChangeResult>> scanModifiedFiles =
+        CompletableFuture<Either<FileAccessError, ModifiedFileWalkerResult>> scanModifiedFiles =
                 CompletableFuture.supplyAsync(() -> new ModifiedFileCollector(filePathInfo, directoryFilter).getFiles(), executorService);
 
-        CompletableFuture<Either<FileAccessError, FileAnalysisResult>> scanDeletedFiles =
+        CompletableFuture<Either<FileAccessError, DeletedFileWalkerResult>> scanDeletedFiles =
                 CompletableFuture.supplyAsync(() -> new DeletedFileCollector(filePathInfo, directoryFilter).getFiles(), executorService);
 
         return scanModifiedFiles.thenCombineAsync(scanDeletedFiles, FileSystemScanResult::new, executorService)

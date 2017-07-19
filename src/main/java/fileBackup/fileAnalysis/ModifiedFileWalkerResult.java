@@ -6,13 +6,13 @@ package fileBackup.fileAnalysis;
  *
  * Created by matt on 30-Jun-17.
  */
-public class FileChangeResult extends FileAnalysisResult {
+public class ModifiedFileWalkerResult extends FileAnalysisResult {
     private long totalFilesModified = 0;
     private long totalFilesUnmodified = 0;
     private long totalNewFiles = 0;
     private long totalNewDirectories = 0;
 
-    public FileChangeResult() {
+    public ModifiedFileWalkerResult() {
         super();
     }
 

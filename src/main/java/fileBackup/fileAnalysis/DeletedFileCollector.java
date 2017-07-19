@@ -51,34 +51,34 @@ import java.nio.file.attribute.FileTime;
  *
  * Created by matt on 30-Jun-17.
  */
-public class DeletedFileCollector extends AbstractFileCollector<FileAnalysisResult> {
+public class DeletedFileCollector extends AbstractFileCollector<DeletedFileWalkerResult> {
 
     public DeletedFileCollector(FilePathInfo filePathInfo, DirectoryFilter directoryFilter) {
         super(filePathInfo, directoryFilter);
     }
 
-    public Either<FileAccessError, FileAnalysisResult> getFiles() {
+    public Either<FileAccessError, DeletedFileWalkerResult> getFiles() {
         DeletedFileVisitor deletedFileVisitor = new DeletedFileVisitor();
 
         Try<Path> tryWalk = Try.of(() -> Files.walkFileTree(filePathInfo.getBackupRootPath(), deletedFileVisitor));
         if (tryWalk.isSuccess()) {
-            return Either.right(deletedFileVisitor.fileAnalysisResult);
+            return Either.right(deletedFileVisitor.deletedFileWalkerResult);
         }
         return Either.left(new FileAccessError("DeletedFileCollector: unable to walk files due to IO error"));
     }
 
     private class DeletedFileVisitor implements FileVisitor<Path> {
         // Mutated during tree walking process and must only be accessed after walking has completed.
-        private FileAnalysisResult fileAnalysisResult;
+        private DeletedFileWalkerResult deletedFileWalkerResult;
 
         public DeletedFileVisitor() {
-            fileAnalysisResult = new FileAnalysisResult();
+            deletedFileWalkerResult = new DeletedFileWalkerResult();
         }
 
         @Override
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
             if (dir == null) {
-                fileAnalysisResult.addFileError(new FileAccessError("preVisitDirectory: Path argument is null, " +
+                deletedFileWalkerResult.addFileError(new FileAccessError("preVisitDirectory: Path argument is null, " +
                         "a potential path could not be analysed for backup"));
                 return FileVisitResult.CONTINUE;
             }
@@ -88,11 +88,11 @@ public class DeletedFileCollector extends AbstractFileCollector<FileAnalysisResu
             }
 
             if (attrs == null) {
-                fileAnalysisResult.addFileError(new FileAccessError(dir,"preVisitDirectory: BasicFileAttributes " +
+                deletedFileWalkerResult.addFileError(new FileAccessError(dir,"preVisitDirectory: BasicFileAttributes " +
                         "argument is null for " + dir.toString() + " resulting in this path being excluded from backup analysis"));
                 return FileVisitResult.CONTINUE;
             }
-            fileAnalysisResult.incrementTotalDirectoriesScanned();
+            deletedFileWalkerResult.incrementTotalDirectoriesScanned();
 
             File backupFile = dir.toFile();
             FileTime backupFileLastModified = attrs.lastModifiedTime();
@@ -113,7 +113,8 @@ public class DeletedFileCollector extends AbstractFileCollector<FileAnalysisResu
                         .fileType(toFileType(backupFile))
                         .create();
 
-                fileAnalysisResult.addFileChangeRecord(fileChangeRecord);
+                deletedFileWalkerResult.addFileChangeRecord(fileChangeRecord);
+                deletedFileWalkerResult.incrementTotalDirectoriesDeleted();
                 return FileVisitResult.SKIP_SUBTREE;
             }
 
@@ -123,17 +124,17 @@ public class DeletedFileCollector extends AbstractFileCollector<FileAnalysisResu
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
             if (file == null) {
-                fileAnalysisResult.addFileError(new FileAccessError("visitFile: Path argument is null, " +
+                deletedFileWalkerResult.addFileError(new FileAccessError("visitFile: Path argument is null, " +
                         "a potential path could not be analysed for backup"));
                 return FileVisitResult.CONTINUE;
             }
             if (attrs == null) {
-                fileAnalysisResult.addFileError(new FileAccessError(file,"visitFile: BasicFileAttributes argument " +
+                deletedFileWalkerResult.addFileError(new FileAccessError(file,"visitFile: BasicFileAttributes argument " +
                         "is null for " + file.toString() + " resulting in this path being excluded from backup analysis"));
                 return FileVisitResult.CONTINUE;
             }
 
-            fileAnalysisResult.incrementTotalFilesScanned();
+            deletedFileWalkerResult.incrementTotalFilesScanned();
 
             FileTime backupFileLastModified = attrs.lastModifiedTime();
 
@@ -150,7 +151,8 @@ public class DeletedFileCollector extends AbstractFileCollector<FileAnalysisResu
                         .fileType(toFileType(file.toFile()))
                         .create();
 
-                fileAnalysisResult.addFileChangeRecord(fileChangeRecord);
+                deletedFileWalkerResult.addFileChangeRecord(fileChangeRecord);
+                deletedFileWalkerResult.incrementTotalFilesDeleted();
             }
             return FileVisitResult.CONTINUE;
         }
@@ -158,12 +160,12 @@ public class DeletedFileCollector extends AbstractFileCollector<FileAnalysisResu
         @Override
         public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
             if (file == null) {
-                fileAnalysisResult.addFileError(new FileAccessError("visitFileFailed: Path argument is null, " +
+                deletedFileWalkerResult.addFileError(new FileAccessError("visitFileFailed: Path argument is null, " +
                         "a potential path could not be analysed for backup"));
                 return FileVisitResult.CONTINUE;
             }
             if (exc != null) {
-                fileAnalysisResult.addFileError(new FileAccessError(file, exc.getMessage() + ", " + file.toString() +
+                deletedFileWalkerResult.addFileError(new FileAccessError(file, exc.getMessage() + ", " + file.toString() +
                         " could not be analysed for backup"));
                 return FileVisitResult.CONTINUE;
             }
@@ -173,12 +175,12 @@ public class DeletedFileCollector extends AbstractFileCollector<FileAnalysisResu
         @Override
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
             if (dir == null) {
-                fileAnalysisResult.addFileError(new FileAccessError("postVisitDirectory: Path argument is null, " +
+                deletedFileWalkerResult.addFileError(new FileAccessError("postVisitDirectory: Path argument is null, " +
                         "a potential path could not be analysed for backup"));
                 return FileVisitResult.CONTINUE;
             }
             if (exc != null) {
-                fileAnalysisResult.addFileError(new FileAccessError(dir, exc.getMessage() + ", " + dir.toString() + " " +
+                deletedFileWalkerResult.addFileError(new FileAccessError(dir, exc.getMessage() + ", " + dir.toString() + " " +
                         "could not be analysed for backup"));
                 return FileVisitResult.CONTINUE;
             }
