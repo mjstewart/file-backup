@@ -183,6 +183,12 @@ public class BackupActionView extends StyledVBox {
     /**
      * Displays file system analysis statistics. getModifiedFileResult and getDeletedFileResult are available as they
      * are verified prior to constructing an instance in the BackupActionView constructor.
+     *
+     * <p>Note: these statistics are based on what the {@code AbstractFileCollector}s gathers. For example, if
+     * {@code ModifiedFileCollector} says its found 2 new directories, it doesn't necessarily indicate these will
+     * be in the files ready for backup table view. Its purely an indication of new directories being found and its
+     * most likely they will be created indirectly when a new file is created and non existing parent directories
+     * are created at the same time.</p>
      */
     private class FileSystemScanStatisticsPane extends TitledPane {
         private FileSystemScanStatisticsPane(FileSystemScanResult fileSystemScanResult) {

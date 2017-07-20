@@ -1,4 +1,3 @@
-
 /*
  * --- Colors ---
  * Dark theme  = #242424
@@ -79,6 +78,15 @@
     -fx-fill: white;
 }
 
+/*
+ * This is what allows StyledTableCell which is created using a custom cellFactory to receive row selection highlighting.
+ * Without this, the custom cell renderer blocks the row highlight which is ugly.
+ */
+.table-row-cell:selected .styled-cell {
+    -fx-background-color: -fx-accent;
+    -fx-border-color: -fx-accent;
+}
+
 .file-system-action-new {
     -fx-background-color: #ABF7AC;
     -fx-border-color: -fx-base;
@@ -110,7 +118,6 @@
     -fx-background-color: #FCB2B2;
     -fx-border-color: -fx-base;
 }
-
 
 .error-label {
     /* Basic error labels that appear on main views */

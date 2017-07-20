@@ -19,7 +19,6 @@ import java.util.logging.Level;
  */
 public class TableCellFactory {
 
-
     public static <T> StyledTableCell<T> defaultTableCell() {
         return new StyledTableCell<>(StyleRule.ofEmpty());
     }
@@ -39,7 +38,7 @@ public class TableCellFactory {
                 case Delete:
                     return styles.get(2);
                 default:
-                    return styles.get(2);
+                    return CssStyleString.ofEmpty();
             }
         };
         return new StyledTableCell<>(StyleRule.of(styles, styleMapper));
@@ -80,7 +79,7 @@ public class TableCellFactory {
                 case FAILURE:
                     return styles.get(1);
                 default:
-                    return styles.get(1);
+                    return CssStyleString.ofEmpty();
             }
         };
         return new StyledTableCell<>(StyleRule.of(styles, styleMapper));
@@ -101,7 +100,7 @@ public class TableCellFactory {
                 case Delete:
                     return styles.get(2);
                 default:
-                    return styles.get(2);
+                    return CssStyleString.ofEmpty();
             }
         };
         return new StyledTableCell<>(StyleRule.of(styles, styleMapper));
@@ -119,7 +118,7 @@ public class TableCellFactory {
                 case FAILURE:
                     return styles.get(1);
                 default:
-                    return styles.get(1);
+                    return CssStyleString.ofEmpty();
             }
         };
         return new StyledTableCell<>(StyleRule.of(styles, styleMapper));
