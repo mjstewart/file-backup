@@ -7,7 +7,7 @@ import io.vavr.control.Either;
 /**
  * Contains the start root directory information in {@link #getStartingRootRecord} with the success or failure
  * of running the file walk procedure of deleting the entire directory contents in {@link #getResult}.
- *
+ * <p>
  * Created by matt on 09-Jul-17.
  */
 public class DeleteDirectoryTaskResult {
@@ -17,8 +17,8 @@ public class DeleteDirectoryTaskResult {
     /**
      * @param startingRootRecord The root record containing the root directory from which the file walking begins to
      *                           delete the entire contents from.
-     * @param result The {@code Either} representing the error if the file walk could not begin otherwise contains
-     *               the results of completing the file walk.
+     * @param result             The {@code Either} representing the error if the file walk could not begin otherwise contains
+     *                           the results of completing the file walk.
      */
     public DeleteDirectoryTaskResult(FileChangeRecord startingRootRecord,
                                      Either<BackupTaskError, FileWalkBackupOperation> result) {

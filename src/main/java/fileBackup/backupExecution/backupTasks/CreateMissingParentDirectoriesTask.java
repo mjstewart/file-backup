@@ -38,6 +38,7 @@ public class CreateMissingParentDirectoriesTask extends SingleBackupTask {
                 .getOrElseGet(ex -> Match(ex).of(
                         Case($(instanceOf(FileAlreadyExistsException.class)), this::onFileAlreadyExistsException),
                         Case($(instanceOf(UnsupportedOperationException.class)), this::onUnsupportedOperationException),
+                        Case($(instanceOf(SecurityException.class)), this::onSecurityException),
                         Case($(), this::onException)
                 ));
     }

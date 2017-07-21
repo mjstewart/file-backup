@@ -123,3 +123,9 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 
 The easiest thing to do is create a common root directory containing symbolic links to all directories
 you wish to backup and set `followSymLinks: true`. The backup drive must follow the same directory structure.
+
+* How can I resolve file permission errors?
+
+This backup tool assumes read and write access is available to all files. If this is not the case
+you will need to change the files in windows by 'right click file properties' or on linux do a `chmod`.
+ 
